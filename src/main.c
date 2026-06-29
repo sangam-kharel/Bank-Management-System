@@ -1,3 +1,4 @@
+#include "../include/account.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -26,7 +27,7 @@ int main(void)
         switch (choice)
         {
             case 1:
-                printf("\nFeature coming in Stage 5.\n");
+                createAccount();
                 break;
 
             case 2:

@@ -81,11 +81,16 @@ make clean
 ```
 ---
 
-## 📅 Status
+## Current Progress
 
-Actively under development. Features are committed incrementally to reflect a real software development workflow.
+- ✅ Project structure
+- ✅ Documentation
+- ✅ Build system
+- ✅ Main menu
+- ✅ Core account architecture
 
-See [`docs/ROADMAP.md`](docs/ROADMAP.md) for planned features and [`docs/CHANGELOG.md`](docs/CHANGELOG.md) for version history.
+🚧 Next milestone:
+Create Account module.
 
 ---
 
