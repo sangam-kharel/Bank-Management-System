@@ -50,8 +50,20 @@ BCA First Semester — Tribhuvan University
 See [`docs/PROJECT_STRUCTURE.md`](docs/PROJECT_STRUCTURE.md) for a full breakdown of the source layout.
 
 ---
-
 ## 🚀 Getting Started
+
+### Prerequisites
+- GCC compiler
+- GNU Make
+- Linux / macOS (or Windows with MinGW)
+
+### Build & Run
+
+**Clone the repository**
+```bash
+git clone https://github.com/your-username/Bank-Management-System.git
+cd Bank-Management-System
+```
 
 **Build**
 ```bash
@@ -63,10 +75,9 @@ make
 ./bank
 ```
 
-**Clean**
+**Clean build files**
 ```bash
 make clean
-```
 
 ---
 
