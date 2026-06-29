@@ -8,11 +8,14 @@
  */
 void createAccount(void)
 {
-    printf("\n========================================\n");
-    printf("        CREATE ACCOUNT MODULE\n");
-    printf("========================================\n");
+    Account account;
 
-    printf("This feature is under development.\n");
+    inputAccountDetails(&account);
+
+    displayAccount(&account);
+
+    printf("\nAccount is ready to be saved.\n");
+    printf("(Database support will be added in Stage 7.)\n");
 }
 
 /*
@@ -21,7 +24,33 @@ void createAccount(void)
  */
 void inputAccountDetails(Account *account)
 {
-    (void)account;
+    printf("\n========== CREATE ACCOUNT ==========\n");
+
+    account->accountNumber = generateAccountNumber();
+
+    printf("Full Name       : ");
+    scanf(" %49[^\n]", account->name);
+
+    printf("Father's Name   : ");
+    scanf(" %49[^\n]", account->fatherName);
+
+    printf("Address         : ");
+    scanf(" %99[^\n]", account->address);
+
+    printf("Phone Number    : ");
+    scanf(" %19s", account->phone);
+
+    printf("Email           : ");
+    scanf(" %49s", account->email);
+
+    printf("Account Type    : ");
+    scanf(" %19s", account->accountType);
+
+    printf("4-Digit PIN     : ");
+    scanf("%d", &account->pin);
+
+    printf("Initial Deposit : ");
+    scanf("%lf", &account->balance);
 }
 
 /*
@@ -30,7 +59,20 @@ void inputAccountDetails(Account *account)
  */
 void displayAccount(const Account *account)
 {
-    (void)account;
+    printf("\n=========================================\n");
+    printf("        ACCOUNT CREATED (PREVIEW)\n");
+    printf("=========================================\n");
+
+    printf("Account Number : %d\n", account->accountNumber);
+    printf("Name           : %s\n", account->name);
+    printf("Father Name    : %s\n", account->fatherName);
+    printf("Address        : %s\n", account->address);
+    printf("Phone          : %s\n", account->phone);
+    printf("Email          : %s\n", account->email);
+    printf("Account Type   : %s\n", account->accountType);
+    printf("Balance        : %.2lf\n", account->balance);
+
+    printf("=========================================\n");
 }
 
 /*
@@ -57,5 +99,7 @@ int accountExists(int accountNumber)
  */
 int generateAccountNumber(void)
 {
-    return 1001;
+    static int nextAccountNumber = 1001;
+
+    return nextAccountNumber++;
 }
