@@ -1,11 +1,15 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
 
-#define NAME_LENGTH         50
-#define ADDRESS_LENGTH      100
-#define PHONE_LENGTH        20
-#define EMAIL_LENGTH        50
-#define TYPE_LENGTH         20
+/* ---------- Constants ---------- */
+
+#define NAME_LENGTH 50
+#define ADDRESS_LENGTH 100
+#define PHONE_LENGTH 20
+#define EMAIL_LENGTH 50
+#define TYPE_LENGTH 20
+
+/* ---------- Account Structure ---------- */
 
 typedef struct
 {
@@ -29,12 +33,15 @@ typedef struct
 
 } Account;
 
-
-/* ========= Account Interface ========= */
+/* ---------- Function Declarations ---------- */
 
 void createAccount(void);
 
+void inputAccountDetails(Account *account);
+
 void displayAccount(const Account *account);
+
+int saveAccount(const Account *account);
 
 int accountExists(int accountNumber);
 
