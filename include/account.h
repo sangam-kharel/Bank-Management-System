@@ -21,5 +21,10 @@ typedef struct{
 
 void createAccount(void);
 void displayAccount(const Account *account);
+int saveAccount(const Account *account);
+
+int accountExists(int accountNumber);
+
+int generateAccountNumber(void);
 
 #endif

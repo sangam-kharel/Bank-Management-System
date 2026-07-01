@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
 
 #include "../include/account.h"
 
 //PRIVATE VARIABLES
 
-static int nextAccountNumber = 1001;
 
 //PRIVATE HELPERS
 
@@ -116,10 +116,6 @@ static int isValidAccountType(const char *type)
 
 //ACCOUNT NUMBER GENERATOR
 
-static int generateAccountNumber(void)
-{
-    return nextAccountNumber++;
-}
 //INPUT FUNCTIONS
 
 static void inputAccountDetails(Account *account)
@@ -269,15 +265,102 @@ void createAccount(void)
 
     /* Show account preview */
     displayAccount(&account);
+    if (saveAccount(&account))
+    {
+      printf("\nAccount successfully saved.\n");
+    }
+    else
+    {
+       printf("\nAccount could not be saved.\n");
+    }
+}
+/*====================================================
+                DATABASE FUNCTIONS
+=====================================================*/
 
-    printf("\n");
-    printf("=========================================\n");
-    printf(" Account created successfully (RAM only)\n");
-    printf("=========================================\n");
-    printf("NOTE:\n");
-    printf("This account currently exists only while\n");
-    printf("the program is running.\n\n");
-    printf("Database storage will be implemented in\n");
-    printf("Version v0.6.0.\n");
-    printf("=========================================\n");
+int saveAccount(const Account *account)
+{
+    FILE *fp;
+
+    fp = fopen("database/accounts.dat", "ab");
+
+    if (fp == NULL)
+    {
+        printf("\nERROR: Unable to open database.\n");
+        return 0;
+    }
+
+    fwrite(account,
+           sizeof(Account),
+           1,
+           fp);
+
+    fclose(fp);
+
+    return 1;
+}
+
+/*--------------------------------------------------*/
+
+int accountExists(int accountNumber)
+{
+    FILE *fp;
+
+    Account account;
+
+    fp = fopen("database/accounts.dat", "rb");
+
+    if (fp == NULL)
+    {
+        return 0;
+    }
+
+    while (fread(&account,
+                 sizeof(Account),
+                 1,
+                 fp) == 1)
+    {
+        if (account.accountNumber == accountNumber)
+        {
+            fclose(fp);
+            return 1;
+        }
+    }
+
+    fclose(fp);
+
+    return 0;
+}
+
+/*--------------------------------------------------*/
+
+int generateAccountNumber(void)
+{
+    FILE *fp;
+
+    Account account;
+
+    int lastNumber = 1000;
+
+    fp = fopen("database/accounts.dat", "rb");
+
+    if (fp == NULL)
+    {
+        return 1001;
+    }
+
+    while (fread(&account,
+                 sizeof(Account),
+                 1,
+                 fp) == 1)
+    {
+        if (account.accountNumber > lastNumber)
+        {
+            lastNumber = account.accountNumber;
+        }
+    }
+
+    fclose(fp);
+
+    return lastNumber + 1;
 }
