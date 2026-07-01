@@ -1,59 +1,283 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+
 #include "../include/account.h"
 
-static int nextAccountNumber=1001;
+//PRIVATE VARIABLES
 
-static void trim_newline(char*s){
- size_t n=strlen(s);
- if(n&&s[n-1]=='\n') s[n-1]='\0';
+static int nextAccountNumber = 1001;
+
+//PRIVATE HELPERS
+
+static void trimNewline(char *text)
+{
+    size_t len = strlen(text);
+
+    if (len > 0 && text[len - 1] == '\n')
+    {
+        text[len - 1] = '\0';
+    }
 }
 
-static void readLine(const char*prompt,char*buf,size_t sz){
- do{
-   printf("%s",prompt);
-   if(!fgets(buf,sz,stdin)) return;
-   trim_newline(buf);
- }while(strlen(buf)==0);
+static void clearInputBuffer(void)
+{
+    int ch;
+
+    while ((ch = getchar()) != '\n' && ch != EOF)
+    {
+    }
 }
 
-void displayAccount(const Account *a){
- printf("\n===== ACCOUNT PREVIEW =====\n");
- printf("Account : %d\n",a->accountNumber);
- printf("Name    : %s\n",a->name);
- printf("Father  : %s\n",a->fatherName);
- printf("Address : %s\n",a->address);
- printf("Phone   : %s\n",a->phone);
- printf("Email   : %s\n",a->email);
- printf("Type    : %s\n",a->accountType);
- printf("Balance : %.2f\n",a->balance);
+static void readString(const char *message,
+                       char *buffer,
+                       int size)
+{
+    while (1)
+    {
+        printf("%s", message);
+
+        if (fgets(buffer, size, stdin) == NULL)
+        {
+            continue;
+        }
+
+        trimNewline(buffer);
+
+        if (strlen(buffer) == 0)
+        {
+            printf("Input cannot be empty.\n\n");
+            continue;
+        }
+
+        return;
+    }
 }
 
-void createAccount(void){
- Account a;
- char line[64];
+//VALIDATION FUNCTIONS
 
- a.accountNumber=nextAccountNumber++;
+static int isValidPIN(int pin)
+{
+    return (pin >= 1000 && pin <= 9999);
+}
 
- readLine("Full Name: ",a.name,sizeof(a.name));
- readLine("Father Name: ",a.fatherName,sizeof(a.fatherName));
- readLine("Address: ",a.address,sizeof(a.address));
- readLine("Phone: ",a.phone,sizeof(a.phone));
- readLine("Email: ",a.email,sizeof(a.email));
- readLine("Account Type (Savings/Current): ",a.accountType,sizeof(a.accountType));
+static int isValidBalance(double balance)
+{
+    return (balance >= 0);
+}
 
- do{
-   printf("PIN (4 digits): ");
-   if(!fgets(line,sizeof(line),stdin)) return;
-   a.pin=atoi(line);
- }while(a.pin<1000||a.pin>9999);
+static int isDigitsOnly(const char *text)
+{
+    int i;
 
- do{
-   printf("Initial Deposit: ");
-   if(!fgets(line,sizeof(line),stdin)) return;
-   a.balance=atof(line);
- }while(a.balance<0);
+    for (i = 0; text[i] != '\0'; i++)
+    {
+        if (!isdigit((unsigned char)text[i]))
+        {
+            return 0;
+        }
+    }
 
- displayAccount(&a);
- printf("\n[v0.5.0] Account created in memory only. Database support comes in v0.6.0\n");
+    return 1;
+}
+
+static int isValidPhone(const char *phone)
+{
+    int len = strlen(phone);
+
+    if (len < 7 || len > 15)
+    {
+        return 0;
+    }
+
+    return isDigitsOnly(phone);
+}
+
+static int isValidEmail(const char *email)
+{
+    return strchr(email, '@') != NULL;
+}
+
+static int isValidAccountType(const char *type)
+{
+    if (strcmp(type, "Savings") == 0)
+    {
+        return 1;
+    }
+
+    if (strcmp(type, "Current") == 0)
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
+//ACCOUNT NUMBER GENERATOR
+
+static int generateAccountNumber(void)
+{
+    return nextAccountNumber++;
+}
+//INPUT FUNCTIONS
+
+static void inputAccountDetails(Account *account)
+{
+    char input[100];
+
+    /* Account Number */
+    account->accountNumber = generateAccountNumber();
+
+    printf("\n=========================================\n");
+    printf("          CREATE NEW ACCOUNT\n");
+    printf("=========================================\n\n");
+
+    /* Name */
+    readString("Full Name            : ",
+               account->name,
+               NAME_LENGTH);
+
+    /* Father's Name */
+    readString("Father's Name        : ",
+               account->fatherName,
+               NAME_LENGTH);
+
+    /* Address */
+    readString("Address              : ",
+               account->address,
+               ADDRESS_LENGTH);
+
+    /* Phone Number */
+    while (1)
+    {
+        readString("Phone Number         : ",
+                   account->phone,
+                   PHONE_LENGTH);
+
+        if (isValidPhone(account->phone))
+            break;
+
+        printf("Invalid phone number.\n");
+        printf("Only digits are allowed (7 - 15 digits).\n\n");
+    }
+
+    /* Email */
+    while (1)
+    {
+        readString("Email Address        : ",
+                   account->email,
+                   EMAIL_LENGTH);
+
+        if (isValidEmail(account->email))
+            break;
+
+        printf("Invalid email address.\n");
+        printf("Example: sangam@gmail.com\n\n");
+    }
+
+    /* Account Type */
+    while (1)
+    {
+        readString("Account Type "
+                   "(Savings/Current): ",
+                   account->accountType,
+                   TYPE_LENGTH);
+
+        if (isValidAccountType(account->accountType))
+            break;
+
+        printf("Invalid account type.\n");
+        printf("Enter Savings or Current.\n\n");
+    }
+
+//PIN
+    while (1)
+    {
+        printf("4-Digit PIN          : ");
+
+        if (fgets(input, sizeof(input), stdin) == NULL)
+            continue;
+
+        account->pin = atoi(input);
+
+        if (isValidPIN(account->pin))
+            break;
+
+        printf("PIN must be exactly 4 digits.\n\n");
+    }
+
+    /* Initial Deposit */
+    while (1)
+    {
+        printf("Initial Deposit      : ");
+
+        if (fgets(input, sizeof(input), stdin) == NULL)
+            continue;
+
+        account->balance = atof(input);
+
+        if (isValidBalance(account->balance))
+            break;
+
+        printf("Balance cannot be negative.\n\n");
+    }
+}
+
+//DISPLAY FUNCTIONS
+
+void displayAccount(const Account *account)
+{
+    printf("\n");
+    printf("=========================================\n");
+    printf("         ACCOUNT INFORMATION\n");
+    printf("=========================================\n");
+
+    printf("Account Number : %d\n",
+           account->accountNumber);
+
+    printf("Name           : %s\n",
+           account->name);
+
+    printf("Father Name    : %s\n",
+           account->fatherName);
+
+    printf("Address        : %s\n",
+           account->address);
+
+    printf("Phone          : %s\n",
+           account->phone);
+
+    printf("Email          : %s\n",
+           account->email);
+
+    printf("Account Type   : %s\n",
+           account->accountType);
+
+    printf("Balance        : Rs. %.2f\n",
+           account->balance);
+
+    printf("=========================================\n");
+}
+//PUBLIC API
+void createAccount(void)
+{
+    Account account;
+    clearInputBuffer(); 
+    /* Get all customer details */
+    inputAccountDetails(&account);
+
+    /* Show account preview */
+    displayAccount(&account);
+
+    printf("\n");
+    printf("=========================================\n");
+    printf(" Account created successfully (RAM only)\n");
+    printf("=========================================\n");
+    printf("NOTE:\n");
+    printf("This account currently exists only while\n");
+    printf("the program is running.\n\n");
+    printf("Database storage will be implemented in\n");
+    printf("Version v0.6.0.\n");
+    printf("=========================================\n");
 }
