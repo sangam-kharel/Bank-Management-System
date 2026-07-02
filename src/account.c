@@ -274,17 +274,32 @@ void createAccount(void)
        printf("\nAccount could not be saved.\n");
     }
     Account test;
-
-if (findAccount(account.accountNumber, &test))
-{
-    printf("\nVerification Successful!\n");
-
-    printf("Stored Name : %s\n",
-           test.name);
-
-    printf("Stored Balance : %.2f\n",
-           test.balance);
-}
+    if (findAccount(account.accountNumber, &test))
+    {
+        printf("\nVerification Successful!\n");
+    
+        printf("Stored Name : %s\n",
+               test.name);
+        
+        printf("Stored Balance : %.2f\n",
+               test.balance);
+    }
+    Account verify;
+    if (findAccount(account.accountNumber, &verify))
+    {   
+        verify.balance += 500;    
+    
+        if (updateAccount(&verify))
+        {   
+            printf("\nDatabase update test successful.\n");   
+        
+            if (findAccount(verify.accountNumber, &verify))
+            {
+                printf("New Balance : %.2f\n",
+                       verify.balance);
+            }
+        }
+    }
     
 }
 //DATABASE FUNCTIONS
@@ -372,9 +387,7 @@ int generateAccountNumber(void)
 
     return lastNumber + 1;
 }
-/*====================================================
-            SEARCH FUNCTIONS
-=====================================================*/
+//SEARCH FUNCTIONS
 
 int findAccount(int accountNumber, Account *account)
 {
@@ -439,4 +452,33 @@ long findAccountPosition(int accountNumber)
     fclose(fp);
 
     return -1;
+}
+//UPDATE FUNCTIONS
+int updateAccount(const Account *account)
+{
+    FILE *fp;
+
+    long position;
+
+    position = findAccountPosition(account->accountNumber);
+
+    if (position == -1)
+    {
+        return 0;
+    }
+
+    fp = fopen("database/accounts.dat", "rb+");
+
+    if (fp == NULL)
+    {
+        return 0;
+    }
+
+    fseek(fp, position, SEEK_SET);
+
+    fwrite(account, sizeof(Account), 1, fp);
+
+    fclose(fp);
+
+    return 1;
 }
