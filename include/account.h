@@ -22,9 +22,9 @@ typedef struct{
 void createAccount(void);
 void displayAccount(const Account *account);
 int saveAccount(const Account *account);
-
 int accountExists(int accountNumber);
-
 int generateAccountNumber(void);
+int findAccount(int accountNumber, Account *account);
+long findAccountPosition(int accountNumber);
 
 #endif

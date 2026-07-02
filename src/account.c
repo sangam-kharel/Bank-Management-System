@@ -114,7 +114,6 @@ static int isValidAccountType(const char *type)
     return 0;
 }
 
-//ACCOUNT NUMBER GENERATOR
 
 //INPUT FUNCTIONS
 
@@ -268,15 +267,27 @@ void createAccount(void)
     if (saveAccount(&account))
     {
       printf("\nAccount successfully saved.\n");
+      
     }
     else
     {
        printf("\nAccount could not be saved.\n");
     }
+    Account test;
+
+if (findAccount(account.accountNumber, &test))
+{
+    printf("\nVerification Successful!\n");
+
+    printf("Stored Name : %s\n",
+           test.name);
+
+    printf("Stored Balance : %.2f\n",
+           test.balance);
 }
-/*====================================================
-                DATABASE FUNCTIONS
-=====================================================*/
+    
+}
+//DATABASE FUNCTIONS
 
 int saveAccount(const Account *account)
 {
@@ -300,7 +311,6 @@ int saveAccount(const Account *account)
     return 1;
 }
 
-/*--------------------------------------------------*/
 
 int accountExists(int accountNumber)
 {
@@ -332,8 +342,6 @@ int accountExists(int accountNumber)
     return 0;
 }
 
-/*--------------------------------------------------*/
-
 int generateAccountNumber(void)
 {
     FILE *fp;
@@ -363,4 +371,72 @@ int generateAccountNumber(void)
     fclose(fp);
 
     return lastNumber + 1;
+}
+/*====================================================
+            SEARCH FUNCTIONS
+=====================================================*/
+
+int findAccount(int accountNumber, Account *account)
+{
+    FILE *fp;
+
+    fp = fopen("database/accounts.dat", "rb");
+
+    if (fp == NULL)
+    {
+        return 0;
+    }
+
+    while (fread(account,
+                 sizeof(Account),
+                 1,
+                 fp) == 1)
+    {
+        if (account->accountNumber == accountNumber)
+        {
+            fclose(fp);
+            return 1;
+        }
+    }
+
+    fclose(fp);
+
+    return 0;
+}
+
+//--------------------------------------------------
+
+long findAccountPosition(int accountNumber)
+{
+    FILE *fp;
+
+    Account account;
+
+    long position;
+
+    fp = fopen("database/accounts.dat", "rb");
+
+    if (fp == NULL)
+    {
+        return -1;
+    }
+
+    while (fread(&account,
+                 sizeof(Account),
+                 1,
+                 fp) == 1)
+    {
+        if (account.accountNumber == accountNumber)
+        {
+            position = ftell(fp) - sizeof(Account);
+
+            fclose(fp);
+
+            return position;
+        }
+    }
+
+    fclose(fp);
+
+    return -1;
 }
