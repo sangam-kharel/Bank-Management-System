@@ -6,7 +6,8 @@ SRC = src/main.c \
       src/utility.c \
       src/account.c \
       src/admin.c \
-      src/transaction.c
+      src/transaction.c \
+      src/database.c \
 
 TARGET = bank
 

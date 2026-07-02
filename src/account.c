@@ -3,11 +3,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
-
+#include "../include/database.h"
 #include "../include/account.h"
-
-//PRIVATE VARIABLES
-
 
 //PRIVATE HELPERS
 
@@ -31,8 +28,7 @@ static void clearInputBuffer(void)
 }
 
 static void readString(const char *message,
-                       char *buffer,
-                       int size)
+char *buffer, int size)
 {
     while (1)
     {
@@ -256,7 +252,7 @@ void displayAccount(const Account *account)
 }
 //PUBLIC API
 void createAccount(void)
-{
+  {
     Account account;
     clearInputBuffer(); 
     /* Get all customer details */
@@ -273,212 +269,4 @@ void createAccount(void)
     {
        printf("\nAccount could not be saved.\n");
     }
-    Account test;
-    if (findAccount(account.accountNumber, &test))
-    {
-        printf("\nVerification Successful!\n");
-    
-        printf("Stored Name : %s\n",
-               test.name);
-        
-        printf("Stored Balance : %.2f\n",
-               test.balance);
-    }
-    Account verify;
-    if (findAccount(account.accountNumber, &verify))
-    {   
-        verify.balance += 500;    
-    
-        if (updateAccount(&verify))
-        {   
-            printf("\nDatabase update test successful.\n");   
-        
-            if (findAccount(verify.accountNumber, &verify))
-            {
-                printf("New Balance : %.2f\n",
-                       verify.balance);
-            }
-        }
-    }
-    
-}
-//DATABASE FUNCTIONS
-
-int saveAccount(const Account *account)
-{
-    FILE *fp;
-
-    fp = fopen("database/accounts.dat", "ab");
-
-    if (fp == NULL)
-    {
-        printf("\nERROR: Unable to open database.\n");
-        return 0;
-    }
-
-    fwrite(account,
-           sizeof(Account),
-           1,
-           fp);
-
-    fclose(fp);
-
-    return 1;
-}
-
-
-int accountExists(int accountNumber)
-{
-    FILE *fp;
-
-    Account account;
-
-    fp = fopen("database/accounts.dat", "rb");
-
-    if (fp == NULL)
-    {
-        return 0;
-    }
-
-    while (fread(&account,
-                 sizeof(Account),
-                 1,
-                 fp) == 1)
-    {
-        if (account.accountNumber == accountNumber)
-        {
-            fclose(fp);
-            return 1;
-        }
-    }
-
-    fclose(fp);
-
-    return 0;
-}
-
-int generateAccountNumber(void)
-{
-    FILE *fp;
-
-    Account account;
-
-    int lastNumber = 1000;
-
-    fp = fopen("database/accounts.dat", "rb");
-
-    if (fp == NULL)
-    {
-        return 1001;
-    }
-
-    while (fread(&account,
-                 sizeof(Account),
-                 1,
-                 fp) == 1)
-    {
-        if (account.accountNumber > lastNumber)
-        {
-            lastNumber = account.accountNumber;
-        }
-    }
-
-    fclose(fp);
-
-    return lastNumber + 1;
-}
-//SEARCH FUNCTIONS
-
-int findAccount(int accountNumber, Account *account)
-{
-    FILE *fp;
-
-    fp = fopen("database/accounts.dat", "rb");
-
-    if (fp == NULL)
-    {
-        return 0;
-    }
-
-    while (fread(account,
-                 sizeof(Account),
-                 1,
-                 fp) == 1)
-    {
-        if (account->accountNumber == accountNumber)
-        {
-            fclose(fp);
-            return 1;
-        }
-    }
-
-    fclose(fp);
-
-    return 0;
-}
-
-//--------------------------------------------------
-
-long findAccountPosition(int accountNumber)
-{
-    FILE *fp;
-
-    Account account;
-
-    long position;
-
-    fp = fopen("database/accounts.dat", "rb");
-
-    if (fp == NULL)
-    {
-        return -1;
-    }
-
-    while (fread(&account,
-                 sizeof(Account),
-                 1,
-                 fp) == 1)
-    {
-        if (account.accountNumber == accountNumber)
-        {
-            position = ftell(fp) - sizeof(Account);
-
-            fclose(fp);
-
-            return position;
-        }
-    }
-
-    fclose(fp);
-
-    return -1;
-}
-//UPDATE FUNCTIONS
-int updateAccount(const Account *account)
-{
-    FILE *fp;
-
-    long position;
-
-    position = findAccountPosition(account->accountNumber);
-
-    if (position == -1)
-    {
-        return 0;
-    }
-
-    fp = fopen("database/accounts.dat", "rb+");
-
-    if (fp == NULL)
-    {
-        return 0;
-    }
-
-    fseek(fp, position, SEEK_SET);
-
-    fwrite(account, sizeof(Account), 1, fp);
-
-    fclose(fp);
-
-    return 1;
-}
+  }
