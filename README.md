@@ -61,7 +61,7 @@ See [`docs/PROJECT_STRUCTURE.md`](docs/PROJECT_STRUCTURE.md) for a full breakdow
 
 **Clone the repository**
 ```bash
-git clone https://github.com/your-username/Bank-Management-System.git
+git clone https://github.com/sangam-kharel/Bank-Management-System.git
 cd Bank-Management-System
 ```
 

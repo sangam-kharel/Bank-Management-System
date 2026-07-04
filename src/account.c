@@ -259,6 +259,9 @@ void createAccount(void)
 {
     Account account;
 
+    /* Clear input buffer to avoid leftover newline */
+    clearInputBuffer();
+
     /* Get all customer details */
     inputAccountDetails(&account);
 
