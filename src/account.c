@@ -121,6 +121,7 @@ static int isValidAccountType(const char *type)
 static void inputAccountDetails(Account *account)
 {
     char input[100];
+    int cancel = 0;
 
     /* Account Number */
     account->accountNumber = generateAccountNumber();
@@ -130,7 +131,37 @@ static void inputAccountDetails(Account *account)
     printf("=========================================\n\n");
 
     /* Name */
-    readString("Full Name            : ", account->name, NAME_LENGTH);
+    while (1)
+    {
+        printf("Full Name (or 0 to cancel): ");
+
+        if (fgets(input, sizeof(input), stdin) == NULL)
+        {
+            continue;
+        }
+
+        trimNewline(input);
+
+        if (strlen(input) == 0)
+        {
+            printf("Input cannot be empty.\n\n");
+            continue;
+        }
+
+        if (strcmp(input, "0") == 0)
+        {
+            cancel = 1;
+            break;
+        }
+
+        strcpy(account->name, input);
+        break;
+    }
+
+    if (cancel)
+    {
+        return;
+    }
 
     /* Father's Name */
     readString("Father's Name        : ", account->fatherName, NAME_LENGTH);
@@ -259,11 +290,20 @@ void createAccount(void)
 {
     Account account;
 
+    /* Initialize to detect cancellation */
+    account.name[0] = '\0';
+
     /* Clear input buffer to avoid leftover newline */
     clearInputBuffer();
 
     /* Get all customer details */
     inputAccountDetails(&account);
+
+    /* Check if user cancelled */
+    if (account.name[0] == '\0')
+    {
+        return;
+    }
 
     /* Show account preview */
     displayAccount(&account);
