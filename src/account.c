@@ -5,6 +5,7 @@
 #include <errno.h>
 #include "../include/database.h"
 #include "../include/account.h"
+#include "../include/utility.h"
 
 //PRIVATE HELPERS
 
@@ -93,6 +94,12 @@ static int isValidPhone(const char *phone)
 static int isValidEmail(const char *email)
 {
     return strchr(email, '@') != NULL;
+}
+
+static int isValidPassword(const char *password)
+{
+    int len = strlen(password);
+    return (len >= 4 && len < PASSWORD_LENGTH);
 }
 
 static int isValidAccountType(const char *type)
@@ -185,17 +192,36 @@ static void inputAccountDetails(Account *account)
 //PIN
     while (1)
     {
-        printf("4-Digit PIN          : ");
-
-        if (fgets(input, sizeof(input), stdin) == NULL)
-            continue;
-
-        account->pin = atoi(input);
-
+        account->pin = readPIN("4-Digit PIN          : ");
         if (isValidPIN(account->pin))
             break;
 
         printf("PIN must be exactly 4 digits.\n\n");
+    }
+
+    /* Password (optional) */
+    while (1)
+    {
+        printf("Password (optional, min 4 chars): ");
+
+        if (fgets(input, sizeof(input), stdin) == NULL)
+            continue;
+
+        trimNewline(input);
+
+        if (strlen(input) == 0)
+        {
+            account->password[0] = '\0';
+            break;
+        }
+
+        if (isValidPassword(input))
+        {
+            strcpy(account->password, input);
+            break;
+        }
+
+        printf("Password must be at least 4 characters.\n\n");
     }
 
     /* Initial Deposit */
@@ -252,9 +278,9 @@ void displayAccount(const Account *account)
 }
 //PUBLIC API
 void createAccount(void)
-  {
+{
     Account account;
-    clearInputBuffer(); 
+    clearInputBuffer();
     /* Get all customer details */
     inputAccountDetails(&account);
 
@@ -262,11 +288,236 @@ void createAccount(void)
     displayAccount(&account);
     if (saveAccount(&account))
     {
-      printf("\nAccount successfully saved.\n");
-      
+        printf("\nAccount successfully saved.\n");
+
     }
     else
     {
-       printf("\nAccount could not be saved.\n");
+        printf("\nAccount could not be saved.\n");
     }
-  }
+}
+
+/* Verify PIN for an account */
+int verifyPIN(int accountNumber, int pin)
+{
+    Account account;
+
+    if (!findAccount(accountNumber, &account))
+    {
+        return 0;
+    }
+
+    return (account.pin == pin);
+}
+
+int verifyPassword(int accountNumber, const char *password)
+{
+    Account account;
+
+    if (!findAccount(accountNumber, &account))
+    {
+        return 0;
+    }
+
+    return (strcmp(account.password, password) == 0);
+}
+
+/* Customer login */
+void customerLogin(void)
+{
+    char phone[PHONE_LENGTH];
+    int pin;
+    char password[PASSWORD_LENGTH];
+    int choice;
+    char input[100];
+    Account account;
+
+    clearScreen();
+    printHeader();
+
+    printf("\n=========================================\n");
+    printf("         CUSTOMER LOGIN\n");
+    printf("=========================================\n\n");
+
+    /* Get Phone Number */
+    while (1)
+    {
+        printf("Phone Number: ");
+
+        if (fgets(input, sizeof(input), stdin) == NULL)
+        {
+            continue;
+        }
+
+        trimNewline(input);
+
+        if (strlen(input) == 0)
+        {
+            printf("Phone number cannot be empty.\n\n");
+            continue;
+        }
+
+        if (!isValidPhone(input))
+        {
+            printf("Invalid phone number. Only digits allowed (7-15 digits).\n\n");
+            continue;
+        }
+
+        strcpy(phone, input);
+
+        /* Check if phone exists */
+        if (findAccountByPhone(phone, &account))
+        {
+            break;
+        }
+
+        printf("No account found with this phone number.\n\n");
+    }
+
+    /* Choose login method */
+    printf("\nLogin Method:\n");
+    printf("1. PIN (4 digits)\n");
+    printf("2. Password\n");
+    printf("Enter choice (1 or 2): ");
+
+    while (1)
+    {
+        if (fgets(input, sizeof(input), stdin) == NULL)
+        {
+            continue;
+        }
+
+        choice = atoi(input);
+
+        if (choice == 1 || choice == 2)
+        {
+            break;
+        }
+
+        printf("Invalid choice. Enter 1 for PIN or 2 for Password: ");
+    }
+
+    if (choice == 1)
+    {
+        /* Login with PIN */
+        pin = readPIN("4-Digit PIN          : ");
+
+        if (findAccountByPhoneAndPin(phone, pin, &account))
+        {
+            printf("\nLogin successful! Welcome back, %s.\n", account.name);
+            pauseScreen();
+            customerDashboard(account.accountNumber);
+        }
+        else
+        {
+            printf("\nInvalid PIN.\n");
+            pauseScreen();
+        }
+    }
+    else
+    {
+        /* Login with Password */
+        readPassword("Password             : ", password, PASSWORD_LENGTH);
+
+        if (findAccountByPhoneAndPassword(phone, password, &account))
+        {
+            printf("\nLogin successful! Welcome back, %s.\n", account.name);
+            pauseScreen();
+            customerDashboard(account.accountNumber);
+        }
+        else
+        {
+            printf("\nInvalid password.\n");
+            pauseScreen();
+        }
+    }
+}
+
+/* Customer dashboard after successful login */
+void customerDashboard(int accountNumber)
+{
+    int choice;
+    Account account;
+    char input[100];
+
+    while (1)
+    {
+        clearScreen();
+        printHeader();
+
+        /* Refresh account data */
+        if (!findAccount(accountNumber, &account))
+        {
+            printf("\nError: Account not found.\n");
+            pauseScreen();
+            return;
+        }
+
+        printf("Welcome, %s (Account: %d)\n", account.name, account.accountNumber);
+        printCustomerMenu();
+
+        printf("\nEnter your choice: ");
+
+        if (fgets(input, sizeof(input), stdin) == NULL)
+        {
+            continue;
+        }
+
+        choice = atoi(input);
+
+        switch (choice)
+        {
+            case 1:
+                /* View Balance */
+                printf("\n=========================================\n");
+                printf("         BALANCE INQUIRY\n");
+                printf("=========================================\n");
+                printf("Account Number : %d\n", account.accountNumber);
+                printf("Name           : %s\n", account.name);
+                printf("Current Balance: Rs. %.2f\n", account.balance);
+                printf("=========================================\n");
+                pauseScreen();
+                break;
+
+            case 2:
+                /* Deposit Money - placeholder for v0.8.0 */
+                printf("\nDeposit feature coming in v0.8.0\n");
+                pauseScreen();
+                break;
+
+            case 3:
+                /* Withdraw Money - placeholder for v0.9.0 */
+                printf("\nWithdraw feature coming in v0.9.0\n");
+                pauseScreen();
+                break;
+
+            case 4:
+                /* Transaction History - placeholder for v1.1.0 */
+                printf("\nTransaction history coming in v1.1.0\n");
+                pauseScreen();
+                break;
+
+            case 5:
+                /* Update Profile - placeholder for v1.5.0 */
+                printf("\nUpdate profile coming in v1.5.0\n");
+                pauseScreen();
+                break;
+
+            case 6:
+                /* Change PIN - placeholder for v1.5.0 */
+                printf("\nChange PIN coming in v1.5.0\n");
+                pauseScreen();
+                break;
+
+            case 7:
+                /* Logout */
+                printf("\nLogging out...\n");
+                pauseScreen();
+                return;
+
+            default:
+                printf("\nInvalid choice. Please try again.\n");
+                pauseScreen();
+        }
+    }
+}

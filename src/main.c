@@ -31,7 +31,7 @@ int main(void)
                 break;
 
             case 2:
-                printf("\nFeature coming in Stage 7.\n");
+                customerLogin();
                 break;
 
             case 3:

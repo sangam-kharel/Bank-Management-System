@@ -17,4 +17,9 @@ long findAccountPosition(int accountNumber);
 
 int updateAccount(const Account *account);
 
+/* Search by phone functions */
+int findAccountByPhone(const char *phone, Account *account);
+int findAccountByPhoneAndPin(const char *phone, int pin, Account *account);
+int findAccountByPhoneAndPassword(const char *phone, const char *password, Account *account);
+
 #endif

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../include/database.h"
 
@@ -182,4 +183,89 @@ int updateAccount(const Account *account)
     fclose(fp);
 
     return 1;
+}
+
+/* Search by phone functions */
+int findAccountByPhone(const char *phone, Account *account)
+{
+    FILE *fp;
+
+    fp = fopen("database/accounts.dat", "rb");
+
+    if (fp == NULL)
+    {
+        return 0;
+    }
+
+    while (fread(account,
+                 sizeof(Account),
+                 1,
+                 fp) == 1)
+    {
+        if (strcmp(account->phone, phone) == 0)
+        {
+            fclose(fp);
+            return 1;
+        }
+    }
+
+    fclose(fp);
+
+    return 0;
+}
+
+int findAccountByPhoneAndPin(const char *phone, int pin, Account *account)
+{
+    FILE *fp;
+
+    fp = fopen("database/accounts.dat", "rb");
+
+    if (fp == NULL)
+    {
+        return 0;
+    }
+
+    while (fread(account,
+                 sizeof(Account),
+                 1,
+                 fp) == 1)
+    {
+        if (strcmp(account->phone, phone) == 0 && account->pin == pin)
+        {
+            fclose(fp);
+            return 1;
+        }
+    }
+
+    fclose(fp);
+
+    return 0;
+}
+
+int findAccountByPhoneAndPassword(const char *phone, const char *password, Account *account)
+{
+    FILE *fp;
+
+    fp = fopen("database/accounts.dat", "rb");
+
+    if (fp == NULL)
+    {
+        return 0;
+    }
+
+    while (fread(account,
+                 sizeof(Account),
+                 1,
+                 fp) == 1)
+    {
+        if (strcmp(account->phone, phone) == 0 && strcmp(account->password, password) == 0)
+        {
+            fclose(fp);
+            return 1;
+        }
+    }
+
+    fclose(fp);
+
+    return 0;
 }
