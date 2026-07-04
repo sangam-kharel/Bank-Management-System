@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <errno.h>
 #include "../include/database.h"
 #include "../include/account.h"
 #include "../include/utility.h"
@@ -28,8 +27,7 @@ static void clearInputBuffer(void)
     }
 }
 
-static void readString(const char *message,
-char *buffer, int size)
+static void readString(const char *message, char *buffer, int size)
 {
     while (1)
     {
@@ -132,26 +130,18 @@ static void inputAccountDetails(Account *account)
     printf("=========================================\n\n");
 
     /* Name */
-    readString("Full Name            : ",
-               account->name,
-               NAME_LENGTH);
+    readString("Full Name            : ", account->name, NAME_LENGTH);
 
     /* Father's Name */
-    readString("Father's Name        : ",
-               account->fatherName,
-               NAME_LENGTH);
+    readString("Father's Name        : ", account->fatherName, NAME_LENGTH);
 
     /* Address */
-    readString("Address              : ",
-               account->address,
-               ADDRESS_LENGTH);
+    readString("Address              : ", account->address, ADDRESS_LENGTH);
 
     /* Phone Number */
     while (1)
     {
-        readString("Phone Number         : ",
-                   account->phone,
-                   PHONE_LENGTH);
+        readString("Phone Number         : ", account->phone, PHONE_LENGTH);
 
         if (isValidPhone(account->phone))
             break;
@@ -163,9 +153,7 @@ static void inputAccountDetails(Account *account)
     /* Email */
     while (1)
     {
-        readString("Email Address        : ",
-                   account->email,
-                   EMAIL_LENGTH);
+        readString("Email Address        : ", account->email, EMAIL_LENGTH);
 
         if (isValidEmail(account->email))
             break;
@@ -177,10 +165,7 @@ static void inputAccountDetails(Account *account)
     /* Account Type */
     while (1)
     {
-        readString("Account Type "
-                   "(Savings/Current): ",
-                   account->accountType,
-                   TYPE_LENGTH);
+        readString("Account Type (Savings/Current): ", account->accountType, TYPE_LENGTH);
 
         if (isValidAccountType(account->accountType))
             break;
@@ -189,7 +174,7 @@ static void inputAccountDetails(Account *account)
         printf("Enter Savings or Current.\n\n");
     }
 
-//PIN
+    /* PIN */
     while (1)
     {
         account->pin = readPIN("4-Digit PIN          : ");
@@ -250,37 +235,30 @@ void displayAccount(const Account *account)
     printf("         ACCOUNT INFORMATION\n");
     printf("=========================================\n");
 
-    printf("Account Number : %d\n",
-           account->accountNumber);
+    printf("Account Number : %d\n", account->accountNumber);
 
-    printf("Name           : %s\n",
-           account->name);
+    printf("Name           : %s\n", account->name);
 
-    printf("Father Name    : %s\n",
-           account->fatherName);
+    printf("Father Name    : %s\n", account->fatherName);
 
-    printf("Address        : %s\n",
-           account->address);
+    printf("Address        : %s\n", account->address);
 
-    printf("Phone          : %s\n",
-           account->phone);
+    printf("Phone          : %s\n", account->phone);
 
-    printf("Email          : %s\n",
-           account->email);
+    printf("Email          : %s\n", account->email);
 
-    printf("Account Type   : %s\n",
-           account->accountType);
+    printf("Account Type   : %s\n", account->accountType);
 
-    printf("Balance        : Rs. %.2f\n",
-           account->balance);
+    printf("Balance        : Rs. %.2f\n", account->balance);
 
     printf("=========================================\n");
 }
+
 //PUBLIC API
 void createAccount(void)
 {
     Account account;
-    clearInputBuffer();
+
     /* Get all customer details */
     inputAccountDetails(&account);
 
@@ -289,7 +267,6 @@ void createAccount(void)
     if (saveAccount(&account))
     {
         printf("\nAccount successfully saved.\n");
-
     }
     else
     {
@@ -332,6 +309,9 @@ void customerLogin(void)
     char input[100];
     Account account;
 
+    /* Clear input buffer to avoid leftover newline */
+    clearInputBuffer();
+
     clearScreen();
     printHeader();
 
@@ -342,7 +322,7 @@ void customerLogin(void)
     /* Get Phone Number */
     while (1)
     {
-        printf("Phone Number: ");
+        printf("Phone Number (or 0 to go back): ");
 
         if (fgets(input, sizeof(input), stdin) == NULL)
         {
@@ -355,6 +335,11 @@ void customerLogin(void)
         {
             printf("Phone number cannot be empty.\n\n");
             continue;
+        }
+
+        if (strcmp(input, "0") == 0)
+        {
+            return; /* Go back to main menu */
         }
 
         if (!isValidPhone(input))
@@ -405,13 +390,11 @@ void customerLogin(void)
         if (findAccountByPhoneAndPin(phone, pin, &account))
         {
             printf("\nLogin successful! Welcome back, %s.\n", account.name);
-            pauseScreen();
             customerDashboard(account.accountNumber);
         }
         else
         {
             printf("\nInvalid PIN.\n");
-            pauseScreen();
         }
     }
     else
@@ -422,13 +405,11 @@ void customerLogin(void)
         if (findAccountByPhoneAndPassword(phone, password, &account))
         {
             printf("\nLogin successful! Welcome back, %s.\n", account.name);
-            pauseScreen();
             customerDashboard(account.accountNumber);
         }
         else
         {
             printf("\nInvalid password.\n");
-            pauseScreen();
         }
     }
 }
@@ -456,14 +437,20 @@ void customerDashboard(int accountNumber)
         printf("Welcome, %s (Account: %d)\n", account.name, account.accountNumber);
         printCustomerMenu();
 
-        printf("\nEnter your choice: ");
+        printf("\nEnter your choice (or 0 to go back): ");
 
         if (fgets(input, sizeof(input), stdin) == NULL)
         {
             continue;
         }
 
+        trimNewline(input);
         choice = atoi(input);
+
+        if (choice == 0)
+        {
+            return; /* Go back to main menu */
+        }
 
         switch (choice)
         {
@@ -511,8 +498,9 @@ void customerDashboard(int accountNumber)
 
             case 7:
                 /* Logout */
+                clearScreen();
+                printHeader();
                 printf("\nLogging out...\n");
-                pauseScreen();
                 return;
 
             default:
