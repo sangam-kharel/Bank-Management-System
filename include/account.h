@@ -29,7 +29,4 @@ void customerLogin(void);
 void customerDashboard(int accountNumber);
 int verifyPIN(int accountNumber, int pin);
 int verifyPassword(int accountNumber, const char *password);
-int findAccountByPhone(const char *phone, Account *account);
-int findAccountByPhoneAndPin(const char *phone, int pin, Account *account);
-int findAccountByPhoneAndPassword(const char *phone, const char *password, Account *account);
 #endif

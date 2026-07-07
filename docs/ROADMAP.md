@@ -1,85 +1,380 @@
-# Roadmap
+# 🗺️ Development Roadmap
 
-## Stage 1
+This roadmap tracks the development progress of the Bank Management System. Every version represents a stable milestone that compiles successfully, passes manual testing, and is committed to GitHub.
 
-* Project setup
-* Git repository
-* Folder structure
+---
 
-## Stage 2
+# ✅ Completed Milestones
 
-* Documentation
-* Build system
+## v0.1.0 — Project Initialization
 
-## Stage 3
+**Status:** ✅ Completed
 
-* Main menu
+### Objectives
 
-## Stage 4
+* Initialize Git repository
+* Create GitHub repository
+* Configure project workspace
 
-* Account structure
+### Completed
 
-## Stage 5
+* Git repository initialized
+* GitHub repository connected
+* Initial commit completed
 
-* Account creation
+---
 
-## Stage 6
+## v0.2.0 — Project Structure
 
-* Binary database
+**Status:** ✅ Completed
 
-## Stage 7
+### Completed
 
-* Customer authentication
+* Professional folder structure
+* Makefile
+* README.md
+* LICENSE
+* `database/`
+* `docs/`
+* `include/`
+* `screenshots/`
+* `src/`
 
-## Stage 8
+---
 
-* Deposit
+## v0.3.0 — Project Skeleton
 
-## Stage 9
+**Status:** ✅ Completed
 
-* Withdraw
+### Completed
 
-## Stage 10
+Created source modules:
 
-* Balance inquiry
+* main.c
+* account.c
+* database.c
+* transaction.c
+* admin.c
+* utility.c
 
-## Stage 11
+Created header files:
 
-* Fund transfer
+* account.h
+* database.h
+* transaction.h
+* admin.h
+* utility.h
 
-## Stage 12
+Implemented modular project architecture.
 
-* Transaction history
+---
 
-## Stage 13
+## v0.4.0 — Main Menu
 
-* Search
+**Status:** ✅ Completed
 
-## Stage 14
+### Completed
 
-* Update account
+Implemented the main navigation menu:
 
-## Stage 15
+```text
+1. Create Account
+2. Customer Login
+3. Administrator Login
+4. Exit
+```
 
-* Delete account
+Navigation between modules established.
 
-## Stage 16
+---
 
-* Administrator dashboard
+## v0.5.0 — Account Creation System
 
-## Stage 17
+**Status:** ✅ Completed
 
-* Banking statistics
+### Completed
 
-## Stage 18
+Implemented complete customer account creation.
+
+Features:
+
+* Full Name
+* Father's Name
+* Address
+* Phone Number
+* Email Address
+* Account Type
+* 4-digit PIN
+* Initial Deposit
+
+Additional work:
 
 * Input validation
+* Empty input handling
+* PIN validation
+* Deposit validation
+* Account preview screen
+* Clean console formatting
 
-## Stage 19
+---
 
-* UI improvements
+## v0.6.0 — Binary Database System
 
-## Stage 20
+**Status:** ✅ Completed
 
-* Version 1.0 Release
+### Completed
 
+Database layer fully implemented.
+
+Implemented functions:
+
+* `saveAccount()`
+* `accountExists()`
+* `generateAccountNumber()`
+* `findAccount()`
+* `findAccountPosition()`
+* `updateAccount()`
+
+Implemented binary storage:
+
+* `accounts.dat`
+* `transactions.dat` (prepared for future use)
+
+Architecture improvements:
+
+* Created dedicated `database.c`
+* Created dedicated `database.h`
+* Moved all database logic out of `account.c`
+* Separated UI logic from database logic
+* Improved modularity and maintainability
+
+Testing completed:
+
+* Account creation
+* Persistent storage
+* Reading binary records
+* Updating binary records
+* Automatic account number generation
+
+Current project architecture is stable and ready for feature development.
+
+---
+
+# 🚧 Upcoming Milestones
+
+---
+ 
+## v0.7.0 — Customer Authentication
+ 
+**Status:** ✅ Completed
+ 
+### Completed
+ 
+Implemented complete customer authentication system.
+ 
+Features:
+ 
+* Customer Login
+* Account Number verification
+* PIN verification
+* Password verification (optional)
+* Authentication system
+* Customer session
+* Logout functionality
+* View Balance (in dashboard)
+ 
+### Technical Changes
+ 
+* Updated `customerLogin()` to use Account Number instead of Phone
+* Added `verifyPIN()` function in account.c
+* Added `verifyPassword()` function in account.c
+* Implemented `customerDashboard()` with menu navigation
+* Removed phone-based authentication functions
+* Clean console formatting maintained
+ 
+---
+ 
+# v0.8.0 — Deposit System
+
+**Status:** ⏳ Planned
+
+### Features
+
+* Deposit money
+* Amount validation
+* Update account balance
+* Save updated account
+* Record transaction history
+
+---
+
+# v0.9.0 — Withdraw System
+
+**Status:** ⏳ Planned
+
+### Features
+
+* Withdraw money
+* Insufficient balance checking
+* Update database
+* Record transaction
+
+---
+
+# v1.0.0 — Customer Dashboard
+
+**Status:** ⏳ Planned
+
+### Features
+
+Customer menu after successful login:
+
+```text
+1. Check Balance
+2. Deposit
+3. Withdraw
+4. Transaction History
+5. Change PIN
+6. Logout
+```
+
+---
+
+# v1.1.0 — Transaction Management
+
+**Status:** ⏳ Planned
+
+### Features
+
+* Transaction history
+* Deposit records
+* Withdrawal records
+* Date & time logging
+* Mini statement
+
+---
+
+# v1.2.0 — Account Management
+
+**Status:** ⏳ Planned
+
+### Features
+
+* Search account
+* Update customer information
+* Delete account
+* Change PIN
+
+---
+
+# v1.3.0 — Administrator Module
+
+**Status:** ⏳ Planned
+
+### Features
+
+Administrator authentication
+
+Administrator dashboard
+
+View all accounts
+
+Search accounts
+
+Delete accounts
+
+Customer statistics
+
+Database statistics
+
+---
+
+# v1.4.0 — Banking Operations
+
+**Status:** ⏳ Planned
+
+### Features
+
+* Money transfer
+* Internal transaction processing
+* Atomic balance updates
+* Transfer history
+
+---
+
+# v1.5.0 — Reporting System
+
+**Status:** ⏳ Planned
+
+### Features
+
+* Customer reports
+* Financial reports
+* Total deposits
+* Total withdrawals
+* Total bank balance
+
+---
+
+# v1.6.0 — Database Utilities
+
+**Status:** ⏳ Planned
+
+### Features
+
+* Database backup
+* Database restore
+* Export data
+* Import data
+* Integrity verification
+
+---
+
+# v2.0.0 — Stable Release
+
+**Status:** 🎯 Final Goal
+
+Complete banking system with:
+
+* Full customer management
+* Administrator management
+* Transaction management
+* Reporting
+* Database utilities
+* Professional documentation
+* Clean modular architecture
+* Portfolio-ready GitHub repository
+
+---
+
+# 📊 Current Progress
+
+| Milestone | Status        |
+| --------- | ------------- |
+| v0.1.0    | ✅ Completed   |
+| v0.2.0    | ✅ Completed   |
+| v0.3.0    | ✅ Completed   |
+| v0.4.0    | ✅ Completed   |
+| v0.5.0    | ✅ Completed   |
+| v0.6.0    | ✅ Completed   |
+| v0.7.0    | ✅ Completed   |
+| v0.8.0    | ⏳ Next        |
+| v0.9.0    | ⏳ Pending     |
+| v1.0.0    | ⏳ Pending     |
+| v1.1.0    | ⏳ Pending     |
+| v1.2.0    | ⏳ Pending     |
+| v1.3.0    | ⏳ Pending     |
+| v1.4.0    | ⏳ Pending     |
+| v1.5.0    | ⏳ Pending     |
+| v1.6.0    | ⏳ Pending     |
+| v2.0.0    | 🎯 Final Goal |
+ 
+---
+ 
+# 🎯 Current Development Target
+ 
+**Current Stable Version:** **v0.7.0**
+ 
+**Next Development Version:** **v0.8.0 – Deposit System**
+
+The project foundation is now complete. All future development will build upon the stable modular architecture and binary database layer implemented through v0.6.0.

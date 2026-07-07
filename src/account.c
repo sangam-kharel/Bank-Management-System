@@ -342,12 +342,11 @@ int verifyPassword(int accountNumber, const char *password)
     return (strcmp(account.password, password) == 0);
 }
 
-/* Customer login */
+/* Customer login - v0.7.0: Account Number based authentication */
 void customerLogin(void)
 {
-    char phone[PHONE_LENGTH];
+    int accountNumber;
     int pin;
-    char password[PASSWORD_LENGTH];
     int choice;
     char input[100];
     Account account;
@@ -362,10 +361,10 @@ void customerLogin(void)
     printf("         CUSTOMER LOGIN\n");
     printf("=========================================\n\n");
 
-    /* Get Phone Number */
+    /* Get Account Number */
     while (1)
     {
-        printf("Phone Number (or 0 to go back): ");
+        printf("Account Number (or 0 to go back): ");
 
         if (fgets(input, sizeof(input), stdin) == NULL)
         {
@@ -376,30 +375,24 @@ void customerLogin(void)
 
         if (strlen(input) == 0)
         {
-            printf("Phone number cannot be empty.\n\n");
+            printf("Account number cannot be empty.\n\n");
             continue;
         }
 
-        if (strcmp(input, "0") == 0)
+        accountNumber = atoi(input);
+
+        if (accountNumber == 0)
         {
             return; /* Go back to main menu */
         }
 
-        if (!isValidPhone(input))
-        {
-            printf("Invalid phone number. Only digits allowed (7-15 digits).\n\n");
-            continue;
-        }
-
-        strcpy(phone, input);
-
-        /* Check if phone exists */
-        if (findAccountByPhone(phone, &account))
+        /* Check if account exists */
+        if (findAccount(accountNumber, &account))
         {
             break;
         }
 
-        printf("No account found with this phone number.\n\n");
+        printf("No account found with this account number.\n\n");
     }
 
     /* Choose login method */
@@ -430,10 +423,10 @@ void customerLogin(void)
         /* Login with PIN */
         pin = readPIN("4-Digit PIN          : ");
 
-        if (findAccountByPhoneAndPin(phone, pin, &account))
+        if (verifyPIN(accountNumber, pin))
         {
             printf("\nLogin successful! Welcome back, %s.\n", account.name);
-            customerDashboard(account.accountNumber);
+            customerDashboard(accountNumber);
         }
         else
         {
@@ -443,12 +436,17 @@ void customerLogin(void)
     else
     {
         /* Login with Password */
+        char password[PASSWORD_LENGTH];
         readPassword("Password             : ", password, PASSWORD_LENGTH);
 
-        if (findAccountByPhoneAndPassword(phone, password, &account))
+        if (strlen(password) == 0)
+        {
+            printf("\nPassword cannot be empty.\n");
+        }
+        else if (verifyPassword(accountNumber, password))
         {
             printf("\nLogin successful! Welcome back, %s.\n", account.name);
-            customerDashboard(account.accountNumber);
+            customerDashboard(accountNumber);
         }
         else
         {
@@ -457,7 +455,7 @@ void customerLogin(void)
     }
 }
 
-/* Customer dashboard after successful login */
+/* Customer dashboard after successful login - v0.7.0 */
 void customerDashboard(int accountNumber)
 {
     int choice;
@@ -498,7 +496,9 @@ void customerDashboard(int accountNumber)
         switch (choice)
         {
             case 1:
-                /* View Balance */
+                /* View Balance - v0.7.0 feature */
+                clearScreen();
+                printHeader();
                 printf("\n=========================================\n");
                 printf("         BALANCE INQUIRY\n");
                 printf("=========================================\n");
