@@ -194,20 +194,33 @@ Features:
  
 ---
  
-# v0.8.0 — Deposit System
-
-**Status:** ⏳ Planned
-
-### Features
-
+## v0.8.0 — Deposit System
+ 
+**Status:** ✅ Completed
+ 
+### Completed
+ 
+Implemented complete deposit system.
+ 
+Features:
+ 
 * Deposit money
 * Amount validation
 * Update account balance
 * Save updated account
 * Record transaction history
-
+ 
+### Technical Changes
+ 
+* Created `Transaction` struct in transaction.h
+* Implemented `saveTransaction()` in transaction.c
+* Implemented `getTransactions()` in transaction.c
+* Implemented `depositMoney()` in transaction.c
+* Added deposit functionality in customerDashboard()
+* Transaction records stored in `transactions.dat`
+ 
 ---
-
+ 
 # v0.9.0 — Withdraw System
 
 **Status:** ⏳ Planned
@@ -358,8 +371,8 @@ Complete banking system with:
 | v0.5.0    | ✅ Completed   |
 | v0.6.0    | ✅ Completed   |
 | v0.7.0    | ✅ Completed   |
-| v0.8.0    | ⏳ Next        |
-| v0.9.0    | ⏳ Pending     |
+| v0.8.0    | ✅ Completed   |
+| v0.9.0    | ⏳ Next        |
 | v1.0.0    | ⏳ Pending     |
 | v1.1.0    | ⏳ Pending     |
 | v1.2.0    | ⏳ Pending     |
@@ -373,8 +386,8 @@ Complete banking system with:
  
 # 🎯 Current Development Target
  
-**Current Stable Version:** **v0.7.0**
+**Current Stable Version:** **v0.8.0**
  
-**Next Development Version:** **v0.8.0 – Deposit System**
+**Next Development Version:** **v0.9.0 – Withdraw System**
 
 The project foundation is now complete. All future development will build upon the stable modular architecture and binary database layer implemented through v0.6.0.

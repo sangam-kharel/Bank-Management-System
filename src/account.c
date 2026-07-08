@@ -5,6 +5,7 @@
 #include "../include/database.h"
 #include "../include/account.h"
 #include "../include/utility.h"
+#include "../include/transaction.h"
 
 //PRIVATE HELPERS
 
@@ -510,9 +511,56 @@ void customerDashboard(int accountNumber)
                 break;
 
             case 2:
-                /* Deposit Money - placeholder for v0.8.0 */
-                printf("\nDeposit feature coming in v0.8.0\n");
-                pauseScreen();
+                /* Deposit Money - v0.8.0 feature */
+                {
+                    double amount;
+                    char input[100];
+                    
+                    clearScreen();
+                    printHeader();
+                    printf("\n=========================================\n");
+                    printf("         DEPOSIT MONEY\n");
+                    printf("=========================================\n");
+                    printf("Account Number : %d\n", account.accountNumber);
+                    printf("Current Balance: Rs. %.2f\n", account.balance);
+                    printf("=========================================\n\n");
+                    
+                    printf("Enter amount to deposit (or 0 to cancel): ");
+                    
+                    if (fgets(input, sizeof(input), stdin) == NULL)
+                    {
+                        continue;
+                    }
+                    
+                    trimNewline(input);
+                    amount = atof(input);
+                    
+                    if (amount == 0)
+                    {
+                        printf("\nDeposit cancelled.\n");
+                        pauseScreen();
+                        break;
+                    }
+                    
+                    if (amount < 0)
+                    {
+                        printf("\nInvalid amount. Amount must be positive.\n");
+                        pauseScreen();
+                        break;
+                    }
+                    
+                    if (amount < 1)
+                    {
+                        printf("\nMinimum deposit amount is Rs. 1.\n");
+                        pauseScreen();
+                        break;
+                    }
+                    
+                    depositMoney(accountNumber, amount);
+                    printf("\nDeposit successful!\n");
+                    printf("New Balance: Rs. %.2f\n", account.balance + amount);
+                    pauseScreen();
+                }
                 break;
 
             case 3:
