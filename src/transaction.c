@@ -91,3 +91,44 @@ void depositMoney(int accountNumber, double amount)
 
     saveTransaction(&transaction);
 }
+
+int withdrawMoney(int accountNumber, double amount)
+{
+    Account account;
+    Transaction transaction;
+    time_t now;
+    struct tm *t;
+
+    if (!findAccount(accountNumber, &account))
+    {
+        return 0;
+    }
+
+    /* Check for sufficient balance */
+    if (account.balance < amount)
+    {
+        return 0;
+    }
+
+    /* Update balance */
+    account.balance -= amount;
+
+    /* Save updated account */
+    updateAccount(&account);
+
+    /* Record transaction */
+    transaction.accountNumber = accountNumber;
+    transaction.type = WITHDRAWAL;
+    transaction.amount = amount;
+    transaction.balanceAfter = account.balance;
+
+    /* Get current date and time */
+    time(&now);
+    t = localtime(&now);
+    strftime(transaction.date, sizeof(transaction.date), "%Y-%m-%d", t);
+    strftime(transaction.time, sizeof(transaction.time), "%H:%M:%S", t);
+
+    saveTransaction(&transaction);
+
+    return 1;
+}

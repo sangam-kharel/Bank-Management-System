@@ -564,9 +564,69 @@ void customerDashboard(int accountNumber)
                 break;
 
             case 3:
-                /* Withdraw Money - placeholder for v0.9.0 */
-                printf("\nWithdraw feature coming in v0.9.0\n");
-                pauseScreen();
+                /* Withdraw Money - v0.9.0 feature */
+                {
+                    double amount;
+                    char input[100];
+                    
+                    clearScreen();
+                    printHeader();
+                    printf("\n=========================================\n");
+                    printf("         WITHDRAW MONEY\n");
+                    printf("=========================================\n");
+                    printf("Account Number : %d\n", account.accountNumber);
+                    printf("Current Balance: Rs. %.2f\n", account.balance);
+                    printf("=========================================\n\n");
+                    
+                    printf("Enter amount to withdraw (or 0 to cancel): ");
+                    
+                    if (fgets(input, sizeof(input), stdin) == NULL)
+                    {
+                        continue;
+                    }
+                    
+                    trimNewline(input);
+                    amount = atof(input);
+                    
+                    if (amount == 0)
+                    {
+                        printf("\nWithdrawal cancelled.\n");
+                        pauseScreen();
+                        break;
+                    }
+                    
+                    if (amount < 0)
+                    {
+                        printf("\nInvalid amount. Amount must be positive.\n");
+                        pauseScreen();
+                        break;
+                    }
+                    
+                    if (amount < 1)
+                    {
+                        printf("\nMinimum withdrawal amount is Rs. 1.\n");
+                        pauseScreen();
+                        break;
+                    }
+                    
+                    if (amount > account.balance)
+                    {
+                        printf("\nInsufficient balance. Your current balance is Rs. %.2f\n", account.balance);
+                        pauseScreen();
+                        break;
+                    }
+                    
+                    if (withdrawMoney(accountNumber, amount))
+                    {
+                        printf("\nWithdrawal successful!\n");
+                        printf("New Balance: Rs. %.2f\n", account.balance - amount);
+                    }
+                    else
+                    {
+                        printf("\nWithdrawal failed. Please try again.\n");
+                    }
+                    pauseScreen();
+                }
                 break;
 
             case 4:

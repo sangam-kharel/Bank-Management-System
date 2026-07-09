@@ -221,19 +221,30 @@ Features:
  
 ---
  
-# v0.9.0 — Withdraw System
-
-**Status:** ⏳ Planned
-
-### Features
-
+## v0.9.0 — Withdraw System
+ 
+**Status:** ✅ Completed
+ 
+### Completed
+ 
+Implemented complete withdraw system.
+ 
+Features:
+ 
 * Withdraw money
 * Insufficient balance checking
 * Update database
 * Record transaction
-
+ 
+### Technical Changes
+ 
+* Implemented `withdrawMoney()` in transaction.c
+* Added withdraw functionality in customerDashboard()
+* Balance validation before withdrawal
+* Transaction records stored in `transactions.dat`
+ 
 ---
-
+ 
 # v1.0.0 — Customer Dashboard
 
 **Status:** ⏳ Planned
@@ -372,8 +383,8 @@ Complete banking system with:
 | v0.6.0    | ✅ Completed   |
 | v0.7.0    | ✅ Completed   |
 | v0.8.0    | ✅ Completed   |
-| v0.9.0    | ⏳ Next        |
-| v1.0.0    | ⏳ Pending     |
+| v0.9.0    | ✅ Completed   |
+| v1.0.0    | ⏳ Next        |
 | v1.1.0    | ⏳ Pending     |
 | v1.2.0    | ⏳ Pending     |
 | v1.3.0    | ⏳ Pending     |
@@ -386,8 +397,8 @@ Complete banking system with:
  
 # 🎯 Current Development Target
  
-**Current Stable Version:** **v0.8.0**
+**Current Stable Version:** **v0.9.0**
  
-**Next Development Version:** **v0.9.0 – Withdraw System**
+**Next Development Version:** **v1.0.0 – Customer Dashboard**
 
 The project foundation is now complete. All future development will build upon the stable modular architecture and binary database layer implemented through v0.6.0.

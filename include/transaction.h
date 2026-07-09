@@ -24,5 +24,6 @@ typedef struct {
 int saveTransaction(const Transaction *transaction);
 int getTransactions(int accountNumber, Transaction *transactions, int *count);
 void depositMoney(int accountNumber, double amount);
+int withdrawMoney(int accountNumber, double amount);
 
 #endif
