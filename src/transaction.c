@@ -6,6 +6,26 @@
 #include "../include/transaction.h"
 #include "../include/database.h"
 
+/* Helper function to record a transaction */
+static void recordTransaction(int accountNumber, TransactionType type, double amount, double balanceAfter)
+{
+    Transaction transaction;
+    time_t now;
+    struct tm *t;
+
+    transaction.accountNumber = accountNumber;
+    transaction.type = type;
+    transaction.amount = amount;
+    transaction.balanceAfter = balanceAfter;
+
+    time(&now);
+    t = localtime(&now);
+    strftime(transaction.date, sizeof(transaction.date), "%Y-%m-%d", t);
+    strftime(transaction.time, sizeof(transaction.time), "%H:%M:%S", t);
+
+    saveTransaction(&transaction);
+}
+
 int saveTransaction(const Transaction *transaction)
 {
     FILE *fp;
@@ -18,11 +38,7 @@ int saveTransaction(const Transaction *transaction)
         return 0;
     }
 
-    fwrite(transaction,
-           sizeof(Transaction),
-           1,
-           fp);
-
+    fwrite(transaction, sizeof(Transaction), 1, fp);
     fclose(fp);
 
     return 1;
@@ -32,7 +48,6 @@ int getTransactions(int accountNumber, Transaction *transactions, int *count)
 {
     FILE *fp;
     Transaction temp;
-    int i = 0;
 
     *count = 0;
 
@@ -43,13 +58,12 @@ int getTransactions(int accountNumber, Transaction *transactions, int *count)
         return 1; /* No transactions file yet, but not an error */
     }
 
-    while (fread(&temp, sizeof(Transaction), 1, fp) == 1 && i < MAX_TRANSACTIONS)
+    while (fread(&temp, sizeof(Transaction), 1, fp) == 1 && *count < MAX_TRANSACTIONS)
     {
         if (temp.accountNumber == accountNumber)
         {
             transactions[*count] = temp;
             (*count)++;
-            i++;
         }
     }
 
@@ -61,9 +75,6 @@ int getTransactions(int accountNumber, Transaction *transactions, int *count)
 void depositMoney(int accountNumber, double amount)
 {
     Account account;
-    Transaction transaction;
-    time_t now;
-    struct tm *t;
 
     if (!findAccount(accountNumber, &account))
     {
@@ -71,64 +82,28 @@ void depositMoney(int accountNumber, double amount)
         return;
     }
 
-    /* Update balance */
     account.balance += amount;
-
-    /* Save updated account */
     updateAccount(&account);
-
-    /* Record transaction */
-    transaction.accountNumber = accountNumber;
-    transaction.type = DEPOSIT;
-    transaction.amount = amount;
-    transaction.balanceAfter = account.balance;
-
-    /* Get current date and time */
-    time(&now);
-    t = localtime(&now);
-    strftime(transaction.date, sizeof(transaction.date), "%Y-%m-%d", t);
-    strftime(transaction.time, sizeof(transaction.time), "%H:%M:%S", t);
-
-    saveTransaction(&transaction);
+    recordTransaction(accountNumber, DEPOSIT, amount, account.balance);
 }
 
 int withdrawMoney(int accountNumber, double amount)
 {
     Account account;
-    Transaction transaction;
-    time_t now;
-    struct tm *t;
 
     if (!findAccount(accountNumber, &account))
     {
         return 0;
     }
 
-    /* Check for sufficient balance */
     if (account.balance < amount)
     {
         return 0;
     }
 
-    /* Update balance */
     account.balance -= amount;
-
-    /* Save updated account */
     updateAccount(&account);
-
-    /* Record transaction */
-    transaction.accountNumber = accountNumber;
-    transaction.type = WITHDRAWAL;
-    transaction.amount = amount;
-    transaction.balanceAfter = account.balance;
-
-    /* Get current date and time */
-    time(&now);
-    t = localtime(&now);
-    strftime(transaction.date, sizeof(transaction.date), "%Y-%m-%d", t);
-    strftime(transaction.time, sizeof(transaction.time), "%H:%M:%S", t);
-
-    saveTransaction(&transaction);
+    recordTransaction(accountNumber, WITHDRAWAL, amount, account.balance);
 
     return 1;
 }

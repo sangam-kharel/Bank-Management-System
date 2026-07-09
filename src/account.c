@@ -514,7 +514,6 @@ void customerDashboard(int accountNumber)
                 /* Deposit Money - v0.8.0 feature */
                 {
                     double amount;
-                    char input[100];
                     
                     clearScreen();
                     printHeader();
@@ -567,7 +566,6 @@ void customerDashboard(int accountNumber)
                 /* Withdraw Money - v0.9.0 feature */
                 {
                     double amount;
-                    char input[100];
                     
                     clearScreen();
                     printHeader();
