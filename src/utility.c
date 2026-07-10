@@ -45,7 +45,7 @@ void printHeader(void)
     printf("                 BANK MANAGEMENT SYSTEM\n");
     printf("=============================================================\n");
     printf("Developer : Sangam Kharel\n");
-    printf("Version   : v0.9.0\n");
+    printf("Version   : v1.0.0\n");
     printf("Language  : C\n");
     printf("=============================================================\n\n");
 }

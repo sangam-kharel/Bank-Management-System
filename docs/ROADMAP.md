@@ -245,25 +245,32 @@ Features:
  
 ---
  
-# v1.0.0 — Customer Dashboard
+## v1.0.0 — Customer Dashboard
 
-**Status:** ⏳ Planned
+**Status:** ✅ Completed
 
-### Features
+### Completed
 
-Customer menu after successful login:
+Customer dashboard fully implemented with all features.
 
-```text
-1. Check Balance
-2. Deposit
-3. Withdraw
-4. Transaction History
-5. Change PIN
-6. Logout
-```
+Features:
+
+* Check Balance
+* Deposit Money
+* Withdraw Money
+* Transaction History (placeholder)
+* Update Profile (placeholder)
+* Change PIN (placeholder)
+* Logout
+
+### Technical Changes
+
+* Implemented `customerDashboard()` with full menu navigation
+* Integrated deposit and withdraw functionality
+* Clean console formatting maintained
 
 ---
-
+ 
 # v1.1.0 — Transaction Management
 
 **Status:** ⏳ Planned
@@ -384,8 +391,8 @@ Complete banking system with:
 | v0.7.0    | ✅ Completed   |
 | v0.8.0    | ✅ Completed   |
 | v0.9.0    | ✅ Completed   |
-| v1.0.0    | ⏳ Next        |
-| v1.1.0    | ⏳ Pending     |
+| v1.0.0    | ✅ Completed   |
+| v1.1.0    | ⏳ Next        |
 | v1.2.0    | ⏳ Pending     |
 | v1.3.0    | ⏳ Pending     |
 | v1.4.0    | ⏳ Pending     |
@@ -397,8 +404,8 @@ Complete banking system with:
  
 # 🎯 Current Development Target
  
-**Current Stable Version:** **v0.9.0**
+**Current Stable Version:** **v1.0.0**
  
-**Next Development Version:** **v1.0.0 – Customer Dashboard**
+**Next Development Version:** **v1.1.0 – Transaction Management**
 
 The project foundation is now complete. All future development will build upon the stable modular architecture and binary database layer implemented through v0.6.0.
