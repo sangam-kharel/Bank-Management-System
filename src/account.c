@@ -628,9 +628,50 @@ void customerDashboard(int accountNumber)
                 break;
 
             case 4:
-                /* Transaction History - placeholder for v1.1.0 */
-                printf("\nTransaction history coming in v1.1.0\n");
-                pauseScreen();
+                /* Transaction History - v1.1.0 feature */
+                {
+                    Transaction transactions[MAX_TRANSACTIONS];
+                    int count = 0;
+                    int i;
+                    
+                    clearScreen();
+                    printHeader();
+                    printf("\n=========================================\n");
+                    printf("       TRANSACTION HISTORY\n");
+                    printf("=========================================\n");
+                    printf("Account Number : %d\n", account.accountNumber);
+                    printf("Name           : %s\n", account.name);
+                    printf("=========================================\n\n");
+                    
+                    if (getTransactions(accountNumber, transactions, &count))
+                    {
+                        if (count == 0)
+                        {
+                            printf("No transactions found.\n");
+                        }
+                        else
+                        {
+                            printf("%-12s | %-10s | %10s | %12s\n", 
+                                   "Date", "Time", "Type", "Amount");
+                            printf("--------------------------------------------------------------\n");
+                            
+                            for (i = 0; i < count; i++)
+                            {
+                                const char *typeStr = (transactions[i].type == DEPOSIT) ? "DEPOSIT" : "WITHDRAWAL";
+                                printf("%-12s | %-10s | %10s | Rs. %10.2f\n",
+                                       transactions[i].date,
+                                       transactions[i].time,
+                                       typeStr,
+                                       transactions[i].amount);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        printf("Error reading transactions.\n");
+                    }
+                    pauseScreen();
+                }
                 break;
 
             case 5:

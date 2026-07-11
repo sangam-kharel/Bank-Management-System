@@ -271,20 +271,31 @@ Features:
 
 ---
  
-# v1.1.0 — Transaction Management
+## v1.1.0 — Transaction Management
 
-**Status:** ⏳ Planned
+**Status:** ✅ Completed
 
-### Features
+### Completed
 
-* Transaction history
+Implemented complete transaction management system.
+
+Features:
+
+* Transaction history display
 * Deposit records
 * Withdrawal records
 * Date & time logging
 * Mini statement
 
----
+### Technical Changes
 
+* Added transaction history display in customerDashboard()
+* Used getTransactions() to retrieve account transactions
+* Formatted output with date, time, type, and amount
+* Transaction records stored in `transactions.dat`
+
+---
+ 
 # v1.2.0 — Account Management
 
 **Status:** ⏳ Planned
@@ -392,8 +403,8 @@ Complete banking system with:
 | v0.8.0    | ✅ Completed   |
 | v0.9.0    | ✅ Completed   |
 | v1.0.0    | ✅ Completed   |
-| v1.1.0    | ⏳ Next        |
-| v1.2.0    | ⏳ Pending     |
+| v1.1.0    | ✅ Completed   |
+| v1.2.0    | ⏳ Next        |
 | v1.3.0    | ⏳ Pending     |
 | v1.4.0    | ⏳ Pending     |
 | v1.5.0    | ⏳ Pending     |
@@ -404,8 +415,8 @@ Complete banking system with:
  
 # 🎯 Current Development Target
  
-**Current Stable Version:** **v1.0.0**
+**Current Stable Version:** **v1.1.0**
  
-**Next Development Version:** **v1.1.0 – Transaction Management**
+**Next Development Version:** **v1.2.0 – Account Management**
 
 The project foundation is now complete. All future development will build upon the stable modular architecture and binary database layer implemented through v0.6.0.
