@@ -675,15 +675,89 @@ void customerDashboard(int accountNumber)
                 break;
 
             case 5:
-                /* Update Profile - placeholder for v1.5.0 */
-                printf("\nUpdate profile coming in v1.5.0\n");
-                pauseScreen();
+                /* Update Profile - v1.2.0 feature */
+                {
+                    clearScreen();
+                    printHeader();
+                    printf("\n=========================================\n");
+                    printf("         UPDATE PROFILE\n");
+                    printf("=========================================\n");
+                    printf("Account Number : %d\n", account.accountNumber);
+                    printf("Current Name   : %s\n", account.name);
+                    printf("=========================================\n\n");
+                    
+                    printf("Enter new name (or 0 to cancel): ");
+                    
+                    if (fgets(input, sizeof(input), stdin) == NULL)
+                    {
+                        continue;
+                    }
+                    
+                    trimNewline(input);
+                    
+                    if (strcmp(input, "0") == 0)
+                    {
+                        printf("\nUpdate cancelled.\n");
+                        pauseScreen();
+                        break;
+                    }
+                    
+                    if (strlen(input) == 0)
+                    {
+                        printf("\nName cannot be empty.\n");
+                        pauseScreen();
+                        break;
+                    }
+                    
+                    strcpy(account.name, input);
+                    
+                    if (updateAccount(&account))
+                    {
+                        printf("\nProfile updated successfully!\n");
+                    }
+                    else
+                    {
+                        printf("\nFailed to update profile.\n");
+                    }
+                    pauseScreen();
+                }
                 break;
 
             case 6:
-                /* Change PIN - placeholder for v1.5.0 */
-                printf("\nChange PIN coming in v1.5.0\n");
-                pauseScreen();
+                /* Change PIN - v1.2.0 feature */
+                {
+                    int newPin;
+                    
+                    clearScreen();
+                    printHeader();
+                    printf("\n=========================================\n");
+                    printf("         CHANGE PIN\n");
+                    printf("=========================================\n");
+                    printf("Account Number : %d\n", account.accountNumber);
+                    printf("Current PIN    : ****\n");
+                    printf("=========================================\n\n");
+                    
+                    newPin = readPIN("Enter new 4-digit PIN: ");
+                    
+                    if (isValidPIN(newPin))
+                    {
+                        account.pin = newPin;
+                        
+                        if (updateAccount(&account))
+                        {
+                            printf("\nPIN changed successfully!\n");
+                        }
+                        else
+                        {
+                            printf("\nFailed to change PIN.\n");
+                        }
+                    }
+                    else
+                    {
+                        printf("\nInvalid PIN. PIN must be exactly 4 digits.\n");
+                    }
+                    pauseScreen();
+                }
                 break;
 
             case 7:

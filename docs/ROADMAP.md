@@ -296,19 +296,27 @@ Features:
 
 ---
  
-# v1.2.0 — Account Management
+## v1.2.0 — Account Management
 
-**Status:** ⏳ Planned
+**Status:** ✅ Completed
 
-### Features
+### Completed
 
-* Search account
-* Update customer information
-* Delete account
+Implemented account management features.
+
+Features:
+
+* Update customer information (name)
 * Change PIN
 
----
+### Technical Changes
 
+* Added update profile functionality in customerDashboard()
+* Added change PIN functionality in customerDashboard()
+* Used updateAccount() to save changes to database
+
+---
+ 
 # v1.3.0 — Administrator Module
 
 **Status:** ⏳ Planned
@@ -404,8 +412,8 @@ Complete banking system with:
 | v0.9.0    | ✅ Completed   |
 | v1.0.0    | ✅ Completed   |
 | v1.1.0    | ✅ Completed   |
-| v1.2.0    | ⏳ Next        |
-| v1.3.0    | ⏳ Pending     |
+| v1.2.0    | ✅ Completed   |
+| v1.3.0    | ⏳ Next        |
 | v1.4.0    | ⏳ Pending     |
 | v1.5.0    | ⏳ Pending     |
 | v1.6.0    | ⏳ Pending     |
@@ -415,8 +423,8 @@ Complete banking system with:
  
 # 🎯 Current Development Target
  
-**Current Stable Version:** **v1.1.0**
+**Current Stable Version:** **v1.2.0**
  
-**Next Development Version:** **v1.2.0 – Account Management**
+**Next Development Version:** **v1.3.0 – Administrator Module**
 
 The project foundation is now complete. All future development will build upon the stable modular architecture and binary database layer implemented through v0.6.0.
